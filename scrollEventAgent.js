@@ -26,7 +26,7 @@ export default class ScrollEventAgent {
       return;
     }
     for(let i in this.events[trigger]) {
-      if (this.events[trigger][i] === callback) {
+      if (this.events[trigger][i].animation === callback) {
         this.events[trigger].splice(i, 1);
         return;
       }
