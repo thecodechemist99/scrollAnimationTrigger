@@ -1,6 +1,6 @@
 # scrollAnimationTrigger
 
-Trigger system to trigger JavaScript animations on specific scroll positions.
+A trigger system to trigger JavaScript animations on specific scroll positions.
 
 # How to use
 
