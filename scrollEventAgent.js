@@ -5,16 +5,20 @@
 */
 
 export default class ScrollEventAgent {
-  constructor() {
+  constructor(framerate) {
     this.events = {};
     this.scrollPos = 0;
+    this.framerate = framerate;
   }
 
-  addEvent(trigger, callback){
+  addEvent(trigger, duration, callback){
     if (!(trigger in this.events)) {
       this.events[trigger] = [];
     }
-    this.events[trigger].push(callback);
+    this.events[trigger].push({
+        duration: duration,
+        animation: callback
+      });
   }
 
   removeEvent(trigger, callback){
@@ -41,7 +45,14 @@ export default class ScrollEventAgent {
     }
 
     for(let elem of this.events[this.scrollPos]) {
-      elem.call(this, delta);
+      let counter = 0;
+      let interval = setInterval(() => {
+        
+        elem.animation.call(this, delta);
+        counter++;
+
+        if (counter > (elem.duration * this.framerate)) clearInterval(interval);
+      }, (1000 / this.framerate));
     }
   }
 }

@@ -6,25 +6,18 @@
 
 let framerate = 30;
 
-let scrollAgent = new ScrollEventAgent();
+let scrollAgent = new ScrollEventAgent(framerate);
 
 window.addEventListener("wheel", (e) => {
   scrollAgent.scroll(e.deltaY);
 });
 
-scrollAgent.addEvent(1, function (delta) {
-  let counter = 0;
-  let interval = setInterval(() => {
+scrollAgent.addEvent(1, 1.8, function (delta) {
 
-    if (delta > 0) {
-      // do something
-    } else {
-      // do something
-    } 
-  
-    counter++;
+  if (delta > 0) {
+    // do something
+  } else {
+    // do something
+  }
 
-    // set duration/resettime
-    if (counter > 25) clearInterval(interval);
-  }, (1000 / framerate));
 });
