@@ -28,7 +28,7 @@ Now you can add as many animations to the trigger system as you want. Simply add
 ```javascript
 scrollAgent.addEvent(1, 1.8, function (delta) {
   // do something ...
-});
+}, 1.2);
 ```
 
 or
@@ -38,10 +38,10 @@ function myFunction(delta) {
   // do something ...
 }
 
-scrollAgent.addEvent(1, 1.8, myFunction);
+scrollAgent.addEvent(1, 1.8, myFunction, 1.2);
 ```
 
-where the parameters are the trigger point (the scroll position of your site in overall scroll steps where your animation shall be triggered), the duration in seconds and the callback function/animation you want to execute when the event is triggered.
+where the parameters are the trigger point (the scroll position of your site in overall scroll steps where your animation shall be triggered), the duration in seconds and the callback function/animation you want to execute when the event is triggered. The last parameter is an optional delay, also in seconds.
 The callback function will recieve `delta` as a parameter, which indicates the scroll direction by a positive or negative number.
 
 ## Remove Events
