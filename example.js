@@ -4,6 +4,8 @@
  * (c) 2020 Florian Beck
 */
 
+import ScrollEventAgent from "./scrollEventAgent.js"
+
 let framerate = 30;
 
 let scrollAgent = new ScrollEventAgent(framerate);
