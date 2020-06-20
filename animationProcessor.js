@@ -11,7 +11,7 @@ export default class AnimationProcessor {
     this.animations = {};
 
     this.easings = {
-      "none": this.noEase,
+      "linear": this.easeLinear,
       "ease-in-sine": this.easeInSine,
       "ease-out-sine": this.easeOutSine,
       "ease-in-out-sine": this.easeInOutSine,
@@ -41,16 +41,16 @@ export default class AnimationProcessor {
       "ease-in-out-elastic": this.easeInOutElastic,
       "ease-in-bounce": this.easeInBounce,
       "ease-out-bounce": this.easeOutBounce,
-      "ease-in-out-bounce": this.easeInOutBounce,
+      "ease-in-out-bounce": this.easeInOutBounce
     };
   }
 
-  addAnimation(name, param, startValue, endValue, duration, easing, delay = 0) {
+  addAnimation(name, target, param, startValue, endValue, duration, easing = "linear", delay = 0, repeat = 0) {
     if (name in this.animations) {
       return false;
     }
     this.animations[name] = () => {
-      this.animate(param, startValue, endValue, duration, easing, delay);
+      this.animate(target, param, startValue, endValue, duration, easing, delay, repeat);
     };
   }
 
@@ -89,22 +89,15 @@ export default class AnimationProcessor {
     this.animations[name].call();
   }
 
-  animate(param, startValue, endValue, duration, easing, delay = 0) {
+  animate(target, param, startValue, endValue, duration, easing = "linear", delay = 0, repeat = 0) {
     let delta = endValue - startValue;
     let counter = 0;
     let progress = 0;
 
     setTimeout(() => {
       let interval = setInterval(() => {
-
-        console.log("param: " + param);
-        console.log("startValue: " + startValue);
-        console.log("endValue: " + endValue);
-        console.log("duration: " + duration);
-        console.log("easing: " + easing);
-        console.log("delay: " + delay);
         // adjust value
-        param = startValue + delta * this.easings[easing].call(progress);
+        target[param] = startValue + delta * this.easings[easing].call(this, progress);
 
         // control animation
         counter++;
@@ -113,13 +106,17 @@ export default class AnimationProcessor {
         // stop animation
         if (counter >= duration * this.fps) {
           clearInterval(interval);
+          // repeat
+          repeat--;
+          if (repeat > 0) {
+            this.animate(target, param, startValue, endValue, duration, easing, delay, repeat);
+          }
         }
       }, 1000 / this.fps);
     }, delay * 1000);
-
   }
 
-  noEase(x) {
+  easeLinear(x) {
     return x;
   }
 
@@ -180,7 +177,7 @@ export default class AnimationProcessor {
   }
 
   easeInOutQuint(x) {
-    return x < 0.5 ? 16 * Math.pow(x, 5) : 1 - MAth.pow(-2 * x + 2, 5) / 2;
+    return x < 0.5 ? 16 * Math.pow(x, 5) : 1 - Math.pow(-2 * x + 2, 5) / 2;
   }
 
   easeInExpo(x) {
@@ -230,7 +227,7 @@ export default class AnimationProcessor {
   easeInElastic(x) {
     const c4 = (2 * Math.PI) / 3;
 
-    return x === 0 ? 0 : x === 1 ? 1 : -Math.pow(2, 10 * x - 10) * MAth.sin((x * 10 - 10.75) * c4);
+    return x === 0 ? 0 : x === 1 ? 1 : -Math.pow(2, 10 * x - 10) * Math.sin((x * 10 - 10.75) * c4);
   }
 
   easeOutElastic(x) {
