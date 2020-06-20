@@ -1,4 +1,9 @@
 import AnimationProcessor from "./animationProcessor.js";
+import ScrollEventAgent from "./scrollEventAgent.js"
+
+let framerate = 30;
+
+let scrollAgent = new ScrollEventAgent(framerate);
 
 class Box {
   constructor(x, y, width, height) {
@@ -26,12 +31,10 @@ class Box {
   }
 }
 
-let framerate = 30;
-
 let animate = new AnimationProcessor(framerate);
 let box = new Box(width / 2, 0, 80, 80);
 
-animate.addAnimation("fall", box.y, 0, 400, 2.0, "ease-out-expo", 0);
+animate.addAnimation("fall", box, "y", 0, 400, 2.0, "ease-in-out-expo", 0, 2);
 console.log(animate.animations);
 
 function draw() {
@@ -46,3 +49,11 @@ function mouseClicked(){
   animate.start("fall");
 }
 window.mouseClicked = mouseClicked;
+
+window.addEventListener("wheel", (e) => {
+  scrollAgent.scroll(e.deltaY);
+});
+
+scrollAgent.addEvent(1, function (delta) {
+  animate.start("fall");
+});

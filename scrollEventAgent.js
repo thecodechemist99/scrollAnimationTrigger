@@ -11,13 +11,12 @@ export default class ScrollEventAgent {
     this.framerate = framerate;
   }
 
-  addEvent(trigger, duration, callback, delay = 0){
+  addEvent(trigger, callback, delay = 0){
     if (!(trigger in this.events)) {
       this.events[trigger] = [];
     }
     this.events[trigger].push({
-        duration: duration,
-        animation: callback,
+        event: callback,
         delay: delay,
       });
   }
@@ -27,7 +26,7 @@ export default class ScrollEventAgent {
       return;
     }
     for(let i in this.events[trigger]) {
-      if (this.events[trigger][i].animation === callback) {
+      if (this.events[trigger][i].event === callback) {
         this.events[trigger].splice(i, 1);
         return;
       }
@@ -40,21 +39,13 @@ export default class ScrollEventAgent {
     } else if (this.scrollPos > 0) {
       this.scrollPos--;
     }
-    
     if (!(this.scrollPos in this.events)) {
       return;
     }
 
     for(let elem of this.events[this.scrollPos]) {
-      let counter = 0;
       setTimeout(() => {
-        let interval = setInterval(() => {
-        
-          elem.animation.call(this, delta);
-          counter++;
-  
-          if (counter > (elem.duration * this.framerate)) clearInterval(interval);
-        }, (1000 / this.framerate));
+          elem.event.call(this, delta);
       }, elem.delay * 1000);
     }
   }
