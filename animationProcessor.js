@@ -90,20 +90,20 @@ export default class AnimationProcessor {
   //   }
   // }
 
-  start(name, reversed = false) {
+  start(name, reversed = false, callback = undefined) {
     if (!(name in this.animations)) {
       return false;
     }
     let a = this.animations[name];
     if (!reversed) {
-      this.animate(a.target, a.param, a.startValue, a.endValue, a.duration, a.easing, a.delay, a.repeat);
+      this.animate(a.target, a.param, a.startValue, a.endValue, a.duration, a.easing, a.delay, a.repeat, callback);
     } else {
-      this.animate(a.target, a.param, a.endValue, a.startValue, a.duration, a.easing, a.delay, a.repeat);
+      this.animate(a.target, a.param, a.endValue, a.startValue, a.duration, a.easing, a.delay, a.repeat, callback);
     }
 
   }
 
-  animate(target, param, startValue, endValue, duration, easing = "linear", delay = 0, repeat = 0) {
+  animate(target, param, startValue, endValue, duration, easing = "linear", delay = 0, repeat = 0, callback = undefined) {
     let delta = endValue - startValue;
     let counter = 0;
     let progress = 0;
@@ -124,6 +124,8 @@ export default class AnimationProcessor {
           repeat--;
           if (repeat > 0) {
             this.animate(target, param, startValue, endValue, duration, easing, delay, repeat);
+          } else if (callback != undefined) {
+            callback();
           }
         }
       }, 1000 / this.fps);
