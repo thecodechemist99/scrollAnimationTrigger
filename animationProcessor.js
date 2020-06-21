@@ -49,18 +49,17 @@ export default class AnimationProcessor {
     if (name in this.animations) {
       return false;
     }
-    this.animations[name] = () => {
-      this.animate(target, param, startValue, endValue, duration, easing, delay, repeat);
-    };
-  }
-
-  addAnimationChain(name, ...args) {
-    if (name in this.animations) {
-      return false;
+    this.animations[name] = {
+      name: name,
+      target: target,
+      param: param,
+      startValue: startValue,
+      endValue: endValue,
+      duration: duration,
+      easing: easing,
+      delay: delay,
+      repeat: repeat
     }
-    this.animations[name] = () => {
-      this.chainAnimations( ...args);
-    };
   }
 
   removeAnimation(name) {
@@ -70,23 +69,38 @@ export default class AnimationProcessor {
     delete this.animations[name];
   }
 
-  chainAnimations(name, ...args) {
-    if (!(name in this.animations) || args.length < 2) {
-      return false;
-    }
-    for (let elem of args) {
-      if (!(elem in this.animations)) {
-        continue;
-      }
-      this.animations[elem].call();
-    }
-  }
+  // addAnimationChain(name, ...args) {
+  //   if (name in this.animations) {
+  //     return false;
+  //   }
+  //   this.animations[name] = () => {
+  //     this.chainAnimations( ...args);
+  //   };
+  // }
 
-  start(name) {
+  // chainAnimations(name, ...args) {
+  //   if (!(name in this.animations) || args.length < 2) {
+  //     return false;
+  //   }
+  //   for (let elem of args) {
+  //     if (!(elem in this.animations)) {
+  //       continue;
+  //     }
+  //     this.animations[elem].call();
+  //   }
+  // }
+
+  start(name, reversed = false) {
     if (!(name in this.animations)) {
       return false;
     }
-    this.animations[name].call();
+    let a = this.animations[name];
+    if (!reversed) {
+      this.animate(a.target, a.param, a.startValue, a.endValue, a.duration, a.easing, a.delay, a.repeat);
+    } else {
+      this.animate(a.target, a.param, a.endValue, a.startValue, a.duration, a.easing, a.delay, a.repeat);
+    }
+
   }
 
   animate(target, param, startValue, endValue, duration, easing = "linear", delay = 0, repeat = 0) {

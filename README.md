@@ -6,10 +6,11 @@ A trigger system to trigger JavaScript animations on specific scroll positions.
 
 ## Setup
 
-Put scrollEventAgent.js in the source path of your site and create an instance of ScrollEventAgent in your javascript file:
+Put animationProcessor.js and scrollEventAgent.js in the source path of your site and create an instance of both classes in your javascript file:
 
 ```javascript
 let framerate = 30;
+let animate = new AnimationProcessor(framerate);
 let scrollAgent = new ScrollEventAgent(framerate);
 ```
 
@@ -21,12 +22,16 @@ window.addEventListener("wheel", (e) => {
 });
 ```
 
+## Add Animations
+
+
+
 ## Add Events
 
-Now you can add as many animations to the trigger system as you want. Simply add them via the `.addEvent` method:
+Now you can add as many events to the trigger system as you want. Simply add them via the `.addEvent` method:
 
 ```javascript
-scrollAgent.addEvent(1, 1.8, function (delta) {
+scrollAgent.addEvent(1, function (delta) {
   // do something ...
 }, 1.2);
 ```
